@@ -19032,64 +19032,27 @@ module.exports = require('./lib/React');
 
 },{"./lib/React":53}],159:[function(require,module,exports){
 var React = require('react');
-var ListItem = require('./ListItem.jsx');
 
-var ingridients = [{
-  "id": 1,
-  "text": "ham"
-}, {
-  "id": 2,
-  "text": "cheese"
-}, {
-  "id": 3,
-  "text": "potato"
-}];
-
-var List = React.createClass({
-  displayName: 'List',
+var appContainer = React.createClass({
+  displayName: 'appContainer',
 
   render: function () {
-    var listItems = ingridients.map(function (item) {
-      return React.createElement(ListItem, { key: item.id, ingridient: item.text });
-    });
-
     return React.createElement(
-      'ul',
+      'div',
       null,
-      listItems
+      'Main Container!'
     );
   }
 });
 
-module.exports = List;
+module.exports = appContainer;
 
-},{"./ListItem.jsx":160,"react":158}],160:[function(require,module,exports){
-var React = require('react');
-
-var ListItem = React.createClass({
-  displayName: 'ListItem',
-
-  render: function () {
-    return React.createElement(
-      'li',
-      null,
-      React.createElement(
-        'h4',
-        null,
-        this.props.ingridient
-      )
-    );
-  }
-});
-
-module.exports = ListItem;
-
-},{"react":158}],161:[function(require,module,exports){
+},{"react":158}],160:[function(require,module,exports){
 var React = require('react');
 var reactDOM = require('react-dom');
 
-var List = require('./components/List.jsx');
+var App = require('./components/appContainer.jsx');
 
-reactDOM.render(React.createElement(List, null), document.getElementById('ingridients'));
+reactDOM.render(React.createElement(App, null), document.getElementById('main'));
 
-},{"./components/List.jsx":159,"react":158,"react-dom":29}]},{},[161]);
+},{"./components/appContainer.jsx":159,"react":158,"react-dom":29}]},{},[160]);

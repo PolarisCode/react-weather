@@ -1,7 +1,7 @@
 var React = require('react');
 var reactDOM  = require('react-dom');
 
-var List = require('./components/List.jsx');
+var App = require('./components/appContainer.jsx');
 
 
-reactDOM.render(<List/>, document.getElementById('main'));
+reactDOM.render(<App/>, document.getElementById('main'));
