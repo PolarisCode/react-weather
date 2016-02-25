@@ -19479,17 +19479,21 @@ var searchCity = React.createClass({
   render: function () {
     return React.createElement(
       'div',
-      { className: 'row col-md-8 col-sm-8 col-xs-8 col-xs-offset-2' },
+      { className: 'row' },
       React.createElement(
         'div',
-        { className: 'form-group col-md-8 col-sm-8 col-xs-8' },
-        React.createElement('input', { type: 'text', className: 'form-control', placeholder: 'Search...',
-          onChange: this.onChange, style: borderStyle, value: this.state.value })
-      ),
-      React.createElement(
-        'button',
-        { onClick: this.props.searchCallback, className: 'btn btn-primary col-md-4 col-sm-4 col-xs-4', style: borderStyle },
-        ' Search '
+        { className: 'col-md-8 col-sm-8 col-xs-8 col-xs-offset-2' },
+        React.createElement(
+          'div',
+          { className: 'form-group col-md-8 col-sm-8 col-xs-8' },
+          React.createElement('input', { type: 'text', className: 'form-control', placeholder: 'Search...',
+            onChange: this.onChange, style: borderStyle, value: this.state.value })
+        ),
+        React.createElement(
+          'button',
+          { onClick: this.props.searchCallback, className: 'btn btn-primary col-md-4 col-sm-4 col-xs-4', style: borderStyle },
+          ' Search '
+        )
       )
     );
   }
@@ -19500,6 +19504,7 @@ module.exports = searchCity;
 },{"react":158}],163:[function(require,module,exports){
 var React = require('react');
 var SearchCity = require('./searchCity.jsx');
+var TodayWheather = require('./todayWheather.jsx');
 var api = require('../wheatherService');
 
 var todayStyle = {
@@ -19511,6 +19516,9 @@ var todayStyle = {
 var today = React.createClass({
   displayName: 'today',
 
+  getInitialState: function () {
+    return { info: null };
+  },
   searchWheather: function () {
 
     var city = this.refs.searchCity.state.value;
@@ -19520,21 +19528,51 @@ var today = React.createClass({
         alert(result.message);
       } else {
         console.log(result);
+        this.setState({ value: result });
       }
-    });
+    }.bind(this));
   },
   render: function () {
     return React.createElement(
       'div',
       { style: todayStyle, className: 'row' },
-      React.createElement(SearchCity, { searchCallback: this.searchWheather, ref: 'searchCity' })
+      React.createElement(SearchCity, { searchCallback: this.searchWheather, ref: 'searchCity' }),
+      React.createElement(TodayWheather, { info: this.state.value })
     );
   }
 });
 
 module.exports = today;
 
-},{"../wheatherService":165,"./searchCity.jsx":162,"react":158}],164:[function(require,module,exports){
+},{"../wheatherService":166,"./searchCity.jsx":162,"./todayWheather.jsx":164,"react":158}],164:[function(require,module,exports){
+var React = require('react');
+
+var todayWheather = React.createClass({
+  displayName: "todayWheather",
+
+  getCity: function () {
+    if (this.props.info) {
+      return React.createElement(
+        "div",
+        { className: "col-md-8 col-md-offset-1 col-xs-8 col-xs-offset-1" },
+        this.props.info.city.name,
+        ", ",
+        this.props.info.city.country
+      );
+    }
+  },
+  render: function () {
+    return React.createElement(
+      "div",
+      { className: "row" },
+      this.getCity()
+    );
+  }
+});
+
+module.exports = todayWheather;
+
+},{"react":158}],165:[function(require,module,exports){
 var React = require('react');
 var reactDOM = require('react-dom');
 
@@ -19542,7 +19580,7 @@ var App = require('./components/appContainer.jsx');
 
 reactDOM.render(React.createElement(App, null), document.getElementById('main'));
 
-},{"./components/appContainer.jsx":161,"react":158,"react-dom":29}],165:[function(require,module,exports){
+},{"./components/appContainer.jsx":161,"react":158,"react-dom":29}],166:[function(require,module,exports){
 var Fetch = require('whatwg-fetch');
 
 var url = "http://api.openweathermap.org/data/2.5/forecast?APPID=e2f7f486750de9a85d21d956f10b7ca5&q=";
@@ -19557,4 +19595,4 @@ var wheatherApi = {
 
 module.exports = wheatherApi;
 
-},{"whatwg-fetch":159}]},{},[164]);
+},{"whatwg-fetch":159}]},{},[165]);
