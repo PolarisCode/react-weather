@@ -1,9 +1,14 @@
 var React = require('react');
+var Today = require('./today.jsx');
+var AllDays = require('./allDays.jsx');
 
 var appContainer = React.createClass({
   render: function(){
     return (
-      <div>Main Container!</div>
+      <div>
+        <Today/>
+        <AllDays/>
+      </div>
     )
   }
 });
