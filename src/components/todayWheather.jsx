@@ -5,7 +5,7 @@ var todayWheather = React.createClass({
     if (this.props.info) {
       return (
         <div  className="col-md-8 col-md-offset-1 col-xs-8 col-xs-offset-1">
-          {this.props.info.city.name}, {this.props.info.city.country}
+          {this.props.info.name}, {this.props.info.sys.country}
         </div>
       );
     }

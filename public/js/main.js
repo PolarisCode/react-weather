@@ -19423,42 +19423,84 @@ module.exports = require('./lib/React');
 
 },{}],160:[function(require,module,exports){
 var React = require('react');
-
-var allDays = React.createClass({
-  displayName: "allDays",
-
-  render: function () {
-    return React.createElement(
-      "div",
-      { className: "row" },
-      " all days "
-    );
-  }
-});
-
-module.exports = allDays;
-
-},{"react":158}],161:[function(require,module,exports){
-var React = require('react');
-var Today = require('./today.jsx');
-var AllDays = require('./allDays.jsx');
+var TopContainer = require('./topContainer.jsx');
+var Forecast = require('./forecast.jsx');
+var api = require('../wheatherService');
 
 var appContainer = React.createClass({
   displayName: 'appContainer',
 
+  getInitialState: function () {
+    return { todayWheather: null, forecast: null, city: "" };
+  },
+  searchWheather: function () {
+
+    var city = this.refs.today.refs.searchCity.state.value;
+
+    this.setState({ city: city });
+
+    api.getTodayWheather(city).then(function (result) {
+      if (result) {
+        this.setState({ todayWheather: result });
+
+        api.getForecast(city).then(function (result) {
+          if (result) {
+
+            this.setState({ forecast: result });
+          }
+        }.bind(this));
+      }
+    }.bind(this));
+  },
   render: function () {
     return React.createElement(
       'div',
       null,
-      React.createElement(Today, null),
-      React.createElement(AllDays, null)
+      React.createElement(TopContainer, { onChange: this.searchWheather, todayWheather: this.state.todayWheather, ref: 'today' }),
+      React.createElement(Forecast, { forecast: this.state.forecast })
     );
   }
 });
 
 module.exports = appContainer;
 
-},{"./allDays.jsx":160,"./today.jsx":163,"react":158}],162:[function(require,module,exports){
+},{"../wheatherService":166,"./forecast.jsx":161,"./topContainer.jsx":164,"react":158}],161:[function(require,module,exports){
+var React = require('react');
+
+var forecast = React.createClass({
+  displayName: "forecast",
+
+  showForecast: function () {
+    if (this.props.forecast) {
+      return React.createElement(
+        "div",
+        null,
+        JSON.stringify(this.props.forecast)
+      );
+    } else {
+      return React.createElement(
+        "div",
+        null,
+        " no data "
+      );
+    }
+  },
+  render: function () {
+    return React.createElement(
+      "div",
+      { className: "row" },
+      React.createElement(
+        "div",
+        { className: "col-xs-12 col-md-12 col-sm-12" },
+        this.showForecast()
+      )
+    );
+  }
+});
+
+module.exports = forecast;
+
+},{"react":158}],162:[function(require,module,exports){
 var React = require('react');
 
 var borderStyle = {
@@ -19503,49 +19545,6 @@ module.exports = searchCity;
 
 },{"react":158}],163:[function(require,module,exports){
 var React = require('react');
-var SearchCity = require('./searchCity.jsx');
-var TodayWheather = require('./todayWheather.jsx');
-var api = require('../wheatherService');
-
-var todayStyle = {
-  background: 'green',
-  color: 'white',
-  height: '250'
-};
-
-var today = React.createClass({
-  displayName: 'today',
-
-  getInitialState: function () {
-    return { info: null };
-  },
-  searchWheather: function () {
-
-    var city = this.refs.searchCity.state.value;
-
-    api.getWheather(city).then(function (result) {
-      if (result.cod === '404') {
-        alert(result.message);
-      } else {
-        console.log(result);
-        this.setState({ value: result });
-      }
-    }.bind(this));
-  },
-  render: function () {
-    return React.createElement(
-      'div',
-      { style: todayStyle, className: 'row' },
-      React.createElement(SearchCity, { searchCallback: this.searchWheather, ref: 'searchCity' }),
-      React.createElement(TodayWheather, { info: this.state.value })
-    );
-  }
-});
-
-module.exports = today;
-
-},{"../wheatherService":166,"./searchCity.jsx":162,"./todayWheather.jsx":164,"react":158}],164:[function(require,module,exports){
-var React = require('react');
 
 var todayWheather = React.createClass({
   displayName: "todayWheather",
@@ -19555,9 +19554,9 @@ var todayWheather = React.createClass({
       return React.createElement(
         "div",
         { className: "col-md-8 col-md-offset-1 col-xs-8 col-xs-offset-1" },
-        this.props.info.city.name,
+        this.props.info.name,
         ", ",
-        this.props.info.city.country
+        this.props.info.sys.country
       );
     }
   },
@@ -19572,7 +19571,34 @@ var todayWheather = React.createClass({
 
 module.exports = todayWheather;
 
-},{"react":158}],165:[function(require,module,exports){
+},{"react":158}],164:[function(require,module,exports){
+var React = require('react');
+var SearchCity = require('./searchCity.jsx');
+var TodayWheather = require('./todayWheather.jsx');
+
+var todayStyle = {
+  background: 'green',
+  color: 'white',
+  height: '250'
+};
+
+var topContainer = React.createClass({
+  displayName: 'topContainer',
+
+
+  render: function () {
+    return React.createElement(
+      'div',
+      { style: todayStyle, className: 'row' },
+      React.createElement(SearchCity, { searchCallback: this.props.onChange, ref: 'searchCity' }),
+      React.createElement(TodayWheather, { info: this.props.todayWheather })
+    );
+  }
+});
+
+module.exports = topContainer;
+
+},{"./searchCity.jsx":162,"./todayWheather.jsx":163,"react":158}],165:[function(require,module,exports){
 var React = require('react');
 var reactDOM = require('react-dom');
 
@@ -19580,15 +19606,32 @@ var App = require('./components/appContainer.jsx');
 
 reactDOM.render(React.createElement(App, null), document.getElementById('main'));
 
-},{"./components/appContainer.jsx":161,"react":158,"react-dom":29}],166:[function(require,module,exports){
+},{"./components/appContainer.jsx":160,"react":158,"react-dom":29}],166:[function(require,module,exports){
 var Fetch = require('whatwg-fetch');
 
-var url = "http://api.openweathermap.org/data/2.5/forecast?APPID=e2f7f486750de9a85d21d956f10b7ca5&q=";
+var baseUrl = "http://api.openweathermap.org/data/2.5/";
+var currentWheatherUrl = baseUrl + "weather?APPID=e2f7f486750de9a85d21d956f10b7ca5&q=";
+var forecastUrl = baseUrl + "forecast?APPID=e2f7f486750de9a85d21d956f10b7ca5&q=";
+
+function Validate(response) {
+  var obj = response.json();
+  if (obj.cod === '404') {
+    alert(obj.message);
+    return null;
+  } else {
+    return obj;
+  }
+}
 
 var wheatherApi = {
-  getWheather: function (cityName) {
-    return fetch(url + cityName).then(function (response) {
-      return response.json();
+  getForecast: function (cityName) {
+    return fetch(forecastUrl + cityName).then(function (response) {
+      return Validate(response);
+    });
+  },
+  getTodayWheather: function (cityName) {
+    return fetch(currentWheatherUrl + cityName).then(function (response) {
+      return Validate(response);
     });
   }
 };
