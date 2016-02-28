@@ -19830,25 +19830,64 @@ module.exports = searchCity;
 
 },{"react":159}],165:[function(require,module,exports){
 var React = require('react');
+var api = require('../wheatherService');
 
 var todayWheather = React.createClass({
-  displayName: "todayWheather",
+  displayName: 'todayWheather',
 
   getCity: function () {
     if (this.props.info) {
       return React.createElement(
-        "div",
-        { className: "col-md-8 col-md-offset-1 col-xs-8 col-xs-offset-1" },
-        this.props.info.name,
-        ", ",
-        this.props.info.sys.country
+        'div',
+        null,
+        React.createElement(
+          'div',
+          { className: 'row' },
+          React.createElement(
+            'div',
+            { className: 'col-md-8 col-md-offset-1 col-xs-8 col-xs-offset-1' },
+            this.props.info.name,
+            ', ',
+            this.props.info.sys.country
+          )
+        ),
+        React.createElement(
+          'div',
+          { className: 'row' },
+          React.createElement(
+            'div',
+            { className: 'col-xs-4 col-xs-offset-1' },
+            React.createElement(
+              'h3',
+              null,
+              Math.round(this.props.info.main.temp - 273.15),
+              ' C'
+            )
+          ),
+          React.createElement(
+            'div',
+            { className: 'col-xs-3' },
+            React.createElement('img', { style: { height: 80 }, src: api.getImageUrl(this.props.info.weather[0].icon) })
+          ),
+          React.createElement(
+            'div',
+            { className: 'col-xs-3' },
+            React.createElement(
+              'h3',
+              null,
+              'W: ',
+              this.props.info.wind.speed,
+              ' m/s'
+            )
+          )
+        )
       );
     }
   },
   render: function () {
     return React.createElement(
-      "div",
-      { className: "row" },
+      'div',
+      { className: 'row' },
       this.getCity()
     );
   }
@@ -19856,15 +19895,15 @@ var todayWheather = React.createClass({
 
 module.exports = todayWheather;
 
-},{"react":159}],166:[function(require,module,exports){
+},{"../wheatherService":168,"react":159}],166:[function(require,module,exports){
 var React = require('react');
 var SearchCity = require('./searchCity.jsx');
 var TodayWheather = require('./todayWheather.jsx');
 
 var todayStyle = {
-  background: 'green',
+  background: '#00CC66',
   color: 'white',
-  height: '250'
+  height: '200'
 };
 
 var topContainer = React.createClass({

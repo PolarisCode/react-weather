@@ -3,9 +3,9 @@ var SearchCity = require('./searchCity.jsx');
 var TodayWheather = require('./todayWheather.jsx');
 
 var todayStyle = {
-  background: 'green',
+  background: '#00CC66',
   color: 'white',
-  height:'250'
+  height:'200'
 }
 
 
