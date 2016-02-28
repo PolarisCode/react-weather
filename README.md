@@ -1,4 +1,4 @@
-# react-wheather
+# react-weather
 
 Weather App
 
