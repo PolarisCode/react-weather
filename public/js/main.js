@@ -19747,8 +19747,7 @@ module.exports = forecast;
 },{"./forecastItem.jsx":163,"react":159}],163:[function(require,module,exports){
 var React = require('react');
 var dateFormat = require('dateformat');
-
-var iconUrl = "http://openweathermap.org/img/w/";
+var api = require('../wheatherService');
 
 var forecastItem = React.createClass({
   displayName: 'forecastItem',
@@ -19765,7 +19764,7 @@ var forecastItem = React.createClass({
       React.createElement(
         'td',
         null,
-        React.createElement('img', { src: iconUrl + this.props.item.weather[0].icon + ".png" })
+        React.createElement('img', { src: api.getImageUrl(this.props.item.weather[0].icon) })
       ),
       React.createElement(
         'td',
@@ -19786,7 +19785,7 @@ var forecastItem = React.createClass({
 
 module.exports = forecastItem;
 
-},{"dateformat":1,"react":159}],164:[function(require,module,exports){
+},{"../wheatherService":168,"dateformat":1,"react":159}],164:[function(require,module,exports){
 var React = require('react');
 
 var borderStyle = {
@@ -19898,6 +19897,7 @@ var Fetch = require('whatwg-fetch');
 var baseUrl = "http://api.openweathermap.org/data/2.5/";
 var currentWheatherUrl = baseUrl + "weather?APPID=e2f7f486750de9a85d21d956f10b7ca5&q=";
 var forecastUrl = baseUrl + "forecast?APPID=e2f7f486750de9a85d21d956f10b7ca5&q=";
+var imageUrl = "http://openweathermap.org/img/w/";
 
 function Validate(response) {
   var obj = response.json();
@@ -19919,6 +19919,9 @@ var wheatherApi = {
     return fetch(currentWheatherUrl + cityName).then(function (response) {
       return Validate(response);
     });
+  },
+  getImageUrl: function (imageId) {
+    return imageUrl + imageId + ".png";
   }
 };
 

@@ -1,7 +1,6 @@
 var React = require('react');
 var dateFormat = require('dateformat');
-
-var iconUrl = "http://openweathermap.org/img/w/";
+var api = require('../wheatherService');
 
 var forecastItem = React.createClass({
   render: function(){
@@ -13,7 +12,7 @@ var forecastItem = React.createClass({
         }
         </td>
         <td>
-          <img src={iconUrl + this.props.item.weather[0].icon + ".png"}/>
+          <img src={api.getImageUrl(this.props.item.weather[0].icon)}/>
         </td>
         <td>
           {Math.round(this.props.item.main.temp - 273.15)} C
