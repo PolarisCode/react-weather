@@ -1,13 +1,24 @@
 var React = require('react');
+var ForecastItem = require('./forecastItem.jsx');
 
 
 var forecast = React.createClass({
   showForecast: function(){
     if (this.props.forecast) {
-      return <div>{JSON.stringify(this.props.forecast)}</div>
+      return (
+        <div>
+          <table className="table">
+            <tbody>
+              {this.props.forecast.list.map(function(day){
+                return <ForecastItem key={day.dt} item ={day}/>
+              })}
+            </tbody>
+          </table>
+        </div>
+      )
     }
     else{
-      return <div> no data </div>
+      return <div> <h4>Please, search for forecast</h4></div>
     }
   },
   render: function(){
